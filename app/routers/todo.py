@@ -1,7 +1,8 @@
+import json
 from app.crud import todo
-from app.schemas.todo import Todo
 from typing import Optional, Sequence
-from fastapi import APIRouter, Query, Path
+from fastapi import APIRouter, Query, Path, Response
+from app.schemas.todo import Todo, TodoCreate, TodoUpdate
 
 # Arguments to pass to todo_router
 TODO_ROUTER_CONFIGURATION = {
@@ -27,3 +28,18 @@ def fetch_todo_by_index(index: int = Path(..., description="Index of todo to fet
         Returns todo of specified index
     """
     return todo.get_todo_by_index(index)
+
+@todo_router.post('/create', response_model=Todo)
+def create_todo(new_todo: TodoCreate):
+    """
+        Updates a todo of specific index
+    """
+    return todo.create_new_todo(new_todo)
+
+@todo_router.put('/{index}', response_model=Todo)
+def update_todo(index: int, updated_todo: TodoUpdate):
+    return todo.update_existing_todo(index, updated_todo)
+
+@todo_router.delete('/{index}', status_code=204)
+def delete_todo(index: int):
+    todo.delete_todo(index)

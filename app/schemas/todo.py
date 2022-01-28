@@ -1,3 +1,5 @@
+from datetime import datetime
+from time import time
 from pydantic import BaseModel, Field
 from app.schemas.base import ObjectId, BSONObjectID
 
@@ -8,6 +10,7 @@ class TodoInDB(BaseModel):
     index: int
     title: str
     body: str
+    added: datetime
     edited: bool = False
 
     class Config:
@@ -19,13 +22,14 @@ class TodoInDB(BaseModel):
 class BaseTodo(BaseModel):
     title: str
     body: str
-    edited: bool = False
 
 class Todo(BaseTodo):
     index: int
+    added: datetime
+    edited: bool = False
 
 class TodoCreate(BaseTodo):
     ...
 
-class TodoUpdate(TodoCreate):
+class TodoUpdate(BaseTodo):
     ...
