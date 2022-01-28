@@ -1,5 +1,5 @@
-from app.routers.todo import todo_router
 from fastapi import APIRouter, FastAPI
+from app.routers.todo import todo_router
 
 # Arguments to pass to FastAPI class
 APP_CONFIGURATION = {
