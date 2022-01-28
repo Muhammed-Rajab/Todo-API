@@ -11,3 +11,5 @@ def get_mongo_client() -> Generator:
         client.close()
 """
 client = MongoClient(settings.MONGODB_URL)
+
+todo_db = client['TodoAPI']
