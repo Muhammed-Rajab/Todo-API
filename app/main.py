@@ -1,5 +1,6 @@
 from fastapi import APIRouter, FastAPI
 from app.routers.todo import todo_router
+from app.routers.auth import auth_router
 
 # Arguments to pass to FastAPI class
 APP_CONFIGURATION = {
@@ -22,6 +23,7 @@ API_ROUTER_CONFIGURATION = {
 api_router = APIRouter(**API_ROUTER_CONFIGURATION)
 
 # Includes other routers to api_router
+api_router.include_router(auth_router)
 api_router.include_router(todo_router)
 
 # Adds api_router to app

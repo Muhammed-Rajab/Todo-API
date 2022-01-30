@@ -1,4 +1,3 @@
-import json
 from app.crud import todo
 from typing import Optional, Sequence
 from fastapi import APIRouter, Query, Path, Response
