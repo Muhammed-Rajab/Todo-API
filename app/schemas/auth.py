@@ -2,6 +2,11 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, validator
 from app.schemas.base import ObjectId, BSONObjectID
 
+class User(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+
 class UserResponse(BaseModel):
     email: EmailStr
     created: bool = True
@@ -38,3 +43,13 @@ class UserRegister(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class Token(BaseModel):
+    sub: str
+    iat: datetime
+    exp: datetime
+    type: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "Bearer"

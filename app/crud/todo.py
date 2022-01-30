@@ -2,10 +2,8 @@ from typing import Sequence
 from datetime import datetime
 from pymongo import ReturnDocument
 from fastapi import HTTPException, Response, status
-from app.database.db_init import todo_db as db
+from app.database.db_init import todos_collection
 from app.schemas.todo import Todo, TodoInDB, TodoCreate, TodoUpdate
-
-todos_collection = db['Todo']
 
 def get_todos(limit: int = 1) -> Sequence[TodoInDB]:
     return list(map(lambda todo: TodoInDB(**todo), todos_collection.find().limit(limit)))
