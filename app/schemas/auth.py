@@ -1,8 +1,10 @@
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, validator
-from app.core.security import contains_special_characters
 from app.schemas.base import ObjectId, BSONObjectID
 
+class UserResponse(BaseModel):
+    email: EmailStr
+    created: bool = True
 
 class UserInDB(BaseModel):
 
@@ -28,13 +30,9 @@ class UserRegister(BaseModel):
 
     @validator('confirm_password')
     def validate_confirm_password(cls,  c_pass, values: dict):
-        
         passwd = values.get('password')
-        
         if passwd == c_pass:
-            check1 = contains_special_characters(passwd, c_pass)
-            if check1:return c_pass
-
+            return c_pass
         raise ValueError("Passwords do not match")
 
 class UserLogin(BaseModel):
