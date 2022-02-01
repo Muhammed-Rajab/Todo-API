@@ -22,6 +22,7 @@ class TodoInDB(BaseModel):
     added: datetime
     edited: bool = False
     finished: bool = False
+    user__id: ObjectId
     priority: TodoPriorityEnum = TodoPriorityEnum.low
 
     class Config:
