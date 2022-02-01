@@ -14,3 +14,6 @@ def get_current_user(token: str =  Depends(oauth2_scheme)) -> User:
         if user:
             return User(**user)
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
+def get_current_token(token: str = Depends(oauth2_scheme)) -> Token:
+    return TokenHandler().decodeJWT(token)
