@@ -1,8 +1,8 @@
-from app.crud import todo
+from app.schemas.auth import Token
+from app.crud.todo import TodoCRUD
 from typing import Optional, Sequence
 from app.dependencies.deps import get_current_token
-from fastapi import APIRouter, Depends, Query, Path, Response
-from app.schemas.auth import Token
+from fastapi import APIRouter, Depends, Query, Path
 from app.schemas.todo import Todo, TodoCreate, TodoUpdate
 
 # Arguments to pass to todo_router
@@ -20,26 +20,32 @@ def get_todos(limit: Optional[int] =  Query(10, gt=0, description="Limit of todo
     """
         Returns todos according to the limit.
     """
-    return todo.get_todos(limit=limit, token=token)
+    return TodoCRUD().get_todos(token=token, limit=limit)
 
 @todo_router.get('/{index}', response_model=Todo)
 def fetch_todo_by_index(index: int = Path(..., description="Index of todo to fetch", gt=0), token: Token =  Depends(get_current_token)):
     """
         Returns todo of specified index
     """
-    return todo.get_todo_by_index(index=index, token=token)
+    return TodoCRUD().get_todo_by_index(token=token, index=index)
 
 @todo_router.post('/create', response_model=Todo)
 def create_todo(new_todo: TodoCreate, token: Token =  Depends(get_current_token)):
     """
-        Updates a todo of specific index
+        Creates a new todo
     """
-    return todo.create_new_todo(new_todo=new_todo, token=token)
+    return TodoCRUD().create_new_todo(token=token, new_todo=new_todo)
 
 @todo_router.put('/{index}', response_model=Todo)
 def update_todo(index: int, updated_todo: TodoUpdate, token: Token =  Depends(get_current_token)):
-    return todo.update_existing_todo(index=index, updated_todo=updated_todo, token=token)
+    """
+        Updates a todo of specific index
+    """
+    return TodoCRUD().update_existing_todo(token=token, index=index, updated_todo=updated_todo)
 
 @todo_router.delete('/{index}', status_code=204)
 def delete_todo(index: int, token: Token =  Depends(get_current_token)):
-    todo.delete_todo(index=index, token=token)
+    """
+        Deletes a todo of specific index
+    """
+    TodoCRUD.delete_todo(token=token, index=index)

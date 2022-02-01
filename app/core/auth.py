@@ -1,13 +1,11 @@
 import jwt
 from typing import Optional, Union
 from app.core.config import settings
-from app.database.db_init import todo_db
 from datetime import datetime, timedelta
 from app.schemas.auth import UserInDB, Token
 from app.core.security import PasswordHasher
 from fastapi.security import OAuth2PasswordBearer
-
-user_collection = todo_db['User']
+from app.database.db_init import todo_db, user_collection
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"/api/auth/login")
 
