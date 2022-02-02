@@ -51,7 +51,10 @@ async def register_user(
     profile_picture: Optional[UploadFile] = None
     ):
     
-    profile_picture_file_bytes = await profile_picture.read()
+    profile_picture_file_bytes = None
+    
+    if profile_picture:    
+        profile_picture_file_bytes = await profile_picture.read()
 
     return UserCRUD().create(UserRegister(**new_user.dict()), profile_picture=profile_picture_file_bytes)
 

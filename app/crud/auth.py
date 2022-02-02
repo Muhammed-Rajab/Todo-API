@@ -12,6 +12,9 @@ from app.schemas.auth import Token, UserLogin, UserRegister, UserInDB, UserRespo
 class UserCRUD:
 
     def _save_profile_picture(self, profile_picture: bytes) -> Dict[str, Any]:
+        
+        if not profile_picture: return "default.png"
+
         random_file_name = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k = 12))
         with open(
@@ -25,7 +28,7 @@ class UserCRUD:
         hashed_password: str = PasswordHasher().hash_password(register_data.password)
         joined: datetime = datetime.now()
 
-        profile_picture_name = self._save_profile_picture(profile_picture) or "default.png"
+        profile_picture_name = self._save_profile_picture(profile_picture)
         return UserInDB(
             **register_data.dict(), 
             hashed_password=hashed_password, 
