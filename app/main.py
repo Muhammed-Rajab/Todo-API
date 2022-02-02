@@ -1,6 +1,8 @@
-from fastapi import APIRouter, FastAPI
+from pathlib import Path
+from app.core.config import settings
 from app.routers.todo import todo_router
 from app.routers.auth import auth_router
+from fastapi import APIRouter, FastAPI, staticfiles
 
 # Arguments to pass to FastAPI class
 APP_CONFIGURATION = {
@@ -29,6 +31,14 @@ api_router.include_router(todo_router)
 # Adds api_router to app
 # Note: This should be in the end or routes won't show up
 app.include_router(api_router)
+
+# Mounting a static files directory to app
+app.mount(
+    settings.STATICFILES_URI,
+    staticfiles.StaticFiles(
+        directory=f"{Path(__file__).resolve().parent}/{settings.STATICFILES_DIR}"), 
+        name="static"
+    )
 
 if __name__ == "__main__":
     

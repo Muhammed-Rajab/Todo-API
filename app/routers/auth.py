@@ -1,4 +1,3 @@
-from pydantic import EmailStr, ValidationError
 from app.dependencies import deps
 from app.crud.auth import UserCRUD
 from app.core import auth as auth_core
@@ -8,7 +7,6 @@ from fastapi import (
     HTTPException, 
     status, 
     Depends,
-    Form
 )
 from app.schemas.auth import Token, User, UserRegister, UserRegisterForm, UserResponse, TokenResponse
 
@@ -23,6 +21,10 @@ auth_router = APIRouter(**AUTH_ROUTER_CONFIGURATION)
 # Token handler to decode and encode JWT tokens
 token_handler = auth_core.TokenHandler()
 
+"""
+    Leaving this code in case if the current solution
+    breaks.
+"""
 # @auth_router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse, tags=["Authentication"])
 # def register_user(
 #     first_name: str = Form(..., max_length=30),
