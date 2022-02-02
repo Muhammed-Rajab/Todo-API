@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
     STATICFILES_DIR: str = "static"
     STATICFILES_URI: str = "/static"
+    BASE_PATH = Path(__file__).resolve().parent.parent
+    PROFILEPICTURES_DIR: str = STATICFILES_DIR + "/images/profile_pictures/"
     ACCESS_TOKEN_EXPIRATION_TIME: float = 60 * 60
     class Config:
         

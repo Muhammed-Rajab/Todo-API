@@ -20,6 +20,7 @@ class UserInDB(BaseModel):
     email: EmailStr
     joined: datetime
     hashed_password: str
+    profile_picture_name: str
 
     class Config:
         allow_population_by_field_name = True

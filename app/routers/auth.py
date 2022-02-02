@@ -1,10 +1,13 @@
+from typing import Optional
 from app.dependencies import deps
 from app.crud.auth import UserCRUD
 from app.core import auth as auth_core
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import (
-    APIRouter, 
-    HTTPException, 
+    APIRouter,
+    File, 
+    HTTPException,
+    UploadFile, 
     status, 
     Depends,
 )
@@ -43,8 +46,14 @@ token_handler = auth_core.TokenHandler()
 #     return UserCRUD().create(new_user)
 
 @auth_router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse, tags=["Authentication"])
-def register_user(new_user: UserRegisterForm = Depends()):
-    return UserCRUD().create(UserRegister(**new_user.dict()))
+async def register_user(
+    new_user: UserRegisterForm = Depends(),
+    profile_picture: Optional[UploadFile] = None
+    ):
+    
+    profile_picture_file_bytes = await profile_picture.read()
+
+    return UserCRUD().create(UserRegister(**new_user.dict()), profile_picture=profile_picture_file_bytes)
 
 @auth_router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, tags=["Authentication"])
 def login_user(login_data: OAuth2PasswordRequestForm = Depends()):
