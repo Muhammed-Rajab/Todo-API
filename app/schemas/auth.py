@@ -1,4 +1,5 @@
 from datetime import datetime
+from fastapi import Form, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field, validator
 from app.schemas.base import ObjectId, BSONObjectID
 
@@ -38,7 +39,28 @@ class UserRegister(BaseModel):
         passwd = values.get('password')
         if passwd == c_pass:
             return c_pass
-        raise ValueError("Passwords do not match")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Passwords do not match")
+
+class UserRegisterForm(UserRegister):
+    # Inherits from User Register class
+    # This class basically accepts register data
+    # In the form of Form Class, so that we can parse and validate them using pydantic
+    def __init__(
+        self,
+        first_name: str = Form(..., max_length=30),
+        last_name: str = Form(..., max_length=30),
+        email: str = Form(..., max_length=255),
+        password: str = Form(..., min_length=8),
+        confirm_password: str = Form(..., min_length=8)
+        ):
+        
+        super().__init__(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+            confirm_password=confirm_password
+        )
 
 class UserLogin(BaseModel):
     email: EmailStr

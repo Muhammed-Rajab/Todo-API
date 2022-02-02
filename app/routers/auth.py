@@ -1,4 +1,4 @@
-from pydantic import EmailStr
+from pydantic import EmailStr, ValidationError
 from app.dependencies import deps
 from app.crud.auth import UserCRUD
 from app.core import auth as auth_core
@@ -10,7 +10,7 @@ from fastapi import (
     Depends,
     Form
 )
-from app.schemas.auth import Token, User, UserRegister, UserResponse, TokenResponse
+from app.schemas.auth import Token, User, UserRegister, UserRegisterForm, UserResponse, TokenResponse
 
 # Arguments to pass to todo_router
 AUTH_ROUTER_CONFIGURATION = {
@@ -23,22 +23,26 @@ auth_router = APIRouter(**AUTH_ROUTER_CONFIGURATION)
 # Token handler to decode and encode JWT tokens
 token_handler = auth_core.TokenHandler()
 
+# @auth_router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse, tags=["Authentication"])
+# def register_user(
+#     first_name: str = Form(..., max_length=30),
+#     last_name: str = Form(..., max_length=30),
+#     email: str = Form(..., max_length=255),
+#     password: str = Form(..., min_length=8),
+#     confirm_password: str = Form(..., min_length=8)
+#     ):
+#     new_user = UserRegister(
+#         first_name=first_name,
+#         last_name=last_name,
+#         email=email,
+#         password=password,
+#         confirm_password=confirm_password
+#     )
+#     return UserCRUD().create(new_user)
+
 @auth_router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse, tags=["Authentication"])
-def register_user(
-    first_name: str = Form(..., max_length=30),
-    last_name: str = Form(..., max_length=30),
-    email: str = Form(..., max_length=255),
-    password: str = Form(..., min_length=8),
-    confirm_password: str = Form(..., min_length=8)
-    ):
-    new_user = UserRegister(
-        first_name=first_name,
-        last_name=last_name,
-        email=email,
-        password=password,
-        confirm_password=confirm_password
-    )
-    return UserCRUD().create(new_user)
+def register_user(new_user: UserRegisterForm = Depends()):
+    return UserCRUD().create(UserRegister(**new_user.dict()))
 
 @auth_router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, tags=["Authentication"])
 def login_user(login_data: OAuth2PasswordRequestForm = Depends()):
