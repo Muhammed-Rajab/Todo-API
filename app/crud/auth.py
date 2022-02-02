@@ -1,8 +1,9 @@
 from datetime import datetime
+from app.schemas.base import ObjectId
 from fastapi import HTTPException, status
 from app.core.security import PasswordHasher
-from app.database.db_init import user_collection
-from app.schemas.auth import UserLogin, UserRegister, UserInDB, UserResponse
+from app.database.db_init import user_collection, todos_collection
+from app.schemas.auth import Token, UserLogin, UserRegister, UserInDB, UserResponse
 
 class UserCRUD:
 
@@ -24,3 +25,15 @@ class UserCRUD:
         new_user: UserInDB = self._create_user(register_data)
         user_collection.insert_one(new_user.dict(by_alias=True))
         return UserResponse(**new_user.dict())
+    
+    def delete(self, token: Token):
+        
+        deleted_user = user_collection.find_one_and_delete({'_id': ObjectId(token.sub)})
+
+        if deleted_user:
+            todos_collection.delete_many({
+                'user__id': ObjectId(token.sub)
+            })
+            return True
+        
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exists.")

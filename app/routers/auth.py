@@ -3,12 +3,11 @@ from app.crud.auth import UserCRUD
 from app.core import auth as auth_core
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, HTTPException, status, Depends
-from app.schemas.auth import User, UserRegister, UserResponse, TokenResponse
+from app.schemas.auth import Token, User, UserRegister, UserResponse, TokenResponse
 
 # Arguments to pass to todo_router
 AUTH_ROUTER_CONFIGURATION = {
-    'prefix': "/auth",
-    'tags': ["Authentication"],
+    'prefix': "/auth"
 }
 
 # Route for all todo related endpoints
@@ -17,11 +16,11 @@ auth_router = APIRouter(**AUTH_ROUTER_CONFIGURATION)
 # Token handler to decode and encode JWT tokens
 token_handler = auth_core.TokenHandler()
 
-@auth_router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@auth_router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse, tags=["Authentication"])
 def register_user(new_user: UserRegister):
     return UserCRUD().create(new_user)
 
-@auth_router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse)
+@auth_router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, tags=["Authentication"])
 def login_user(login_data: OAuth2PasswordRequestForm = Depends()):
 
     # Checks whether the login credentials are valid or not
@@ -36,7 +35,22 @@ def login_user(login_data: OAuth2PasswordRequestForm = Depends()):
     token = token_handler.signJWT(sub = str(user.id))
     return TokenResponse(access_token=token)
 
-@auth_router.get("/me", response_model=User)
+
+USER_ROUTER_CONFIGURATION = {
+    'prefix': "/user",
+    'tags': ["User"]
+}
+
+# Route to take care of logged user related stuff
+user_router = APIRouter(**USER_ROUTER_CONFIGURATION)
+
+@user_router.get("/me", response_model=User)
 def get_logged_user(current_user: User = Depends(deps.get_current_user)):
     # Returns the currently logged user from token in the header
     return current_user
+
+@user_router.delete("/delete")
+def delete_logged_user(token: Token = Depends(deps.get_current_token)):
+    return UserCRUD().delete(token=token)
+
+auth_router.include_router(user_router)
