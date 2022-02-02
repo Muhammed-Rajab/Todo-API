@@ -52,9 +52,10 @@ async def register_user(
     ):
     
     profile_picture_file_bytes = None
-    
-    if profile_picture:    
+
+    if profile_picture:
         profile_picture_file_bytes = await profile_picture.read()
+        print(len(profile_picture_file_bytes))
 
     return UserCRUD().create(UserRegister(**new_user.dict()), profile_picture=profile_picture_file_bytes)
 
