@@ -14,9 +14,9 @@ USER_ROUTER_CONFIGURATION = {
 user_router = APIRouter(**USER_ROUTER_CONFIGURATION)
 
 @user_router.get("/me", response_model=User)
-def get_logged_user(current_user: User = Depends(deps.get_current_user)):
-    # Returns the currently logged user from token in the header
-    return current_user
+def get_logged_user(token: Token = Depends(deps.get_current_token)):
+    # Returns the currently logged user details from token in the header
+    return UserCRUD().get_current_user_details(token=token)
 
 @user_router.delete("/delete")
 def delete_logged_user(token: Token = Depends(deps.get_current_token)):

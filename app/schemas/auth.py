@@ -7,6 +7,8 @@ class User(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
+    joined: datetime
+    profile_picture_name: str
 
 class UserResponse(BaseModel):
     email: EmailStr
