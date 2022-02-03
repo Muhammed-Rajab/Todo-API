@@ -1,7 +1,6 @@
+from typing import Union
 from datetime import datetime
-from typing import Any, Dict, Union
 from pymongo import ReturnDocument
-from app.core.config import settings
 from app.schemas.base import ObjectId
 from fastapi import HTTPException, status
 from app.core.security import PasswordHasher
@@ -64,3 +63,14 @@ class UserCRUD:
                 'profile_picture_name': profile_picture_file_name
             }}
         , return_document=ReturnDocument.AFTER))
+    
+    def remove_profile_picture(self, token: Token):
+        return user_collection.find_one_and_update(
+            {
+                '_id': ObjectId(token.sub)
+            },
+            {
+            "$set":{
+                "profile_picture_name": "default.png"
+            }
+        })
