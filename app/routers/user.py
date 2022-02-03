@@ -1,6 +1,6 @@
 from app.dependencies import deps
 from app.crud.auth import UserCRUD
-from app.schemas.auth import Token, User
+from app.schemas.auth import Token, User, UserUpdateForm
 from fastapi import APIRouter, Depends, UploadFile, status
 
 
@@ -21,6 +21,13 @@ def get_logged_user(token: Token = Depends(deps.get_current_token)):
 @user_router.delete("/delete")
 def delete_logged_user(token: Token = Depends(deps.get_current_token)):
     return UserCRUD().delete(token=token)
+
+@user_router.put("/update", response_model=User)
+def update_user_details(token: Token = Depends(deps.get_current_token), updated_user_details: UserUpdateForm = Depends()):
+    return UserCRUD().update_user_details(
+        token=token,
+        updated_user_details=updated_user_details
+    )
 
 @user_router.put("/profile_picture", status_code=status.HTTP_200_OK)
 async def update_profile_picture(profile_picture: UploadFile, token: Token = Depends(deps.get_current_token)):

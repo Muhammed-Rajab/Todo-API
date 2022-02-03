@@ -69,6 +69,24 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+
+class UserUpdate(BaseModel):
+    first_name: str = Field(..., max_length=30)
+    last_name: str = Field(..., max_length=30)
+
+class  UserUpdateForm(UserUpdate):
+
+    def __init__(
+        self,
+        first_name: str = Form(..., max_length=30),
+        last_name: str = Form(..., max_length=30),
+        ):
+        
+        super().__init__(
+            first_name=first_name,
+            last_name=last_name
+        )
+
 class Token(BaseModel):
     sub: str
     iat: datetime

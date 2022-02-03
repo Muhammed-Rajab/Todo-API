@@ -6,10 +6,20 @@ from fastapi import HTTPException, status
 from app.core.security import PasswordHasher
 from app.core.image_handler import ProfilePictureHandler
 from app.database.db_init import user_collection, todos_collection
-from app.schemas.auth import Token, User, UserRegister, UserInDB, UserResponse
+from app.schemas.auth import Token, User, UserRegister, UserInDB, UserResponse, UserUpdateForm
 
 class UserCRUD:
 
+    def update_user_details(self, token: Token, updated_user_details: UserUpdateForm) -> UserInDB:
+        user = user_collection.find_one_and_update(
+            {
+                '_id': ObjectId(token.sub)
+            },
+            {
+                "$set":updated_user_details.dict()
+            },return_document=ReturnDocument.AFTER
+        )
+        return UserInDB(**user)
     def get_current_user_details(self, token: Token) -> User:
         user = user_collection.find_one({
             '_id': ObjectId(token.sub)
