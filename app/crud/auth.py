@@ -1,7 +1,6 @@
-import string
-import random
 from datetime import datetime
 from typing import Any, Dict, Union
+from pymongo import ReturnDocument
 from app.core.config import settings
 from app.schemas.base import ObjectId
 from fastapi import HTTPException, status
@@ -52,3 +51,16 @@ class UserCRUD:
             return True
         
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exists.")
+    
+    def update_profile_picture(self, profile_picture_file_bytes: bytes, token: Token):
+        profile_picture_file_name = ProfilePictureHandler(profile_picture_file_bytes).saved_file_name
+        
+        if profile_picture_file_name == "default.png":
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Corrupt or broken profile picture. Only PNG format is allowed.")
+        
+        return UserInDB(**user_collection.find_one_and_update(
+            {'_id': ObjectId(token.sub)},
+            {'$set':{
+                'profile_picture_name': profile_picture_file_name
+            }}
+        , return_document=ReturnDocument.AFTER))
