@@ -6,11 +6,11 @@ A simple **Todo App** api made using [Fast API](https://fastapi.tiangolo.com/) a
 
 ## Screenshots
 
-![Screenshot #1](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Screenshot #1](screenshots/s1.png)
 
-![Screenshot #2](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Screenshot #2](screenshots/s2.png)
 
-![Screenshot #3](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Screenshot #3](screenshots/s3.png)
 ## Introduction
 
 >  *I built this API on my own to learn to handle **CRUD** operations, database, authentication etc in fastapi. This API is not production ready rightnow. There are still few more features to implement, few bugs and need to add more comments. Use it carefully!*
