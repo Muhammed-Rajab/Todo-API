@@ -25,19 +25,17 @@ class ProfilePictureHandler:
         if file == None: return
 
         self.file = file
-        self.im = Image.open(BytesIO(self.file))
 
-        print(self._check_file_size())
+        try:
+            self.im = Image.open(BytesIO(self.file))
+        except:
+            return
 
-        if not self._check_file_size: return
+        if len(self.file) > settings.PROFILE_PICTURE_FILESIZE:
+            return
         
-        if self._check_file_format_is_png:self.saved_file_name = self.save()
-    
-    def _check_file_size(self):
-        return len(self.file) <= settings.PROFILE_PICTURE_FILESIZE
-    
-    def _check_file_format_is_png(self):
-        return self.im.format == 'PNG'
+        if self.im.format == 'PNG':
+            self.saved_file_name = self.save()
     
     def _generate_random_file_name(self) -> str:
         return ''.join(
