@@ -2,6 +2,7 @@ from typing import Optional
 from app.dependencies import deps
 from app.crud.auth import UserCRUD
 from app.core import auth as auth_core
+from app.routers.user import user_router
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import (
     APIRouter,
@@ -73,23 +74,5 @@ def login_user(login_data: OAuth2PasswordRequestForm = Depends()):
     # Creates a JWT token
     token = token_handler.signJWT(sub = str(user.id))
     return TokenResponse(access_token=token)
-
-
-USER_ROUTER_CONFIGURATION = {
-    'prefix': "/user",
-    'tags': ["User"]
-}
-
-# Route to take care of logged user related stuff
-user_router = APIRouter(**USER_ROUTER_CONFIGURATION)
-
-@user_router.get("/me", response_model=User)
-def get_logged_user(current_user: User = Depends(deps.get_current_user)):
-    # Returns the currently logged user from token in the header
-    return current_user
-
-@user_router.delete("/delete")
-def delete_logged_user(token: Token = Depends(deps.get_current_token)):
-    return UserCRUD().delete(token=token)
 
 auth_router.include_router(user_router)
