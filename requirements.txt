@@ -11,6 +11,7 @@ h11==0.13.0
 idna==3.3
 mongoengine==0.23.1
 passlib==1.7.4
+Pillow==9.0.0
 pyasn1==0.4.8
 pycparser==2.21
 pydantic==1.9.0
