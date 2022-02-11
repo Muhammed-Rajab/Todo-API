@@ -1,7 +1,7 @@
 
 # Todo API
 
-A simple **Todo App** api made using [Fast API](https://fastapi.tiangolo.com/) and [MongoDB](https://www.mongodb.com/)
+A Fully functional **Todo App** API made using [Fast API](https://fastapi.tiangolo.com/) and [MongoDB](https://www.mongodb.com/)
 
 
 ## Screenshots
