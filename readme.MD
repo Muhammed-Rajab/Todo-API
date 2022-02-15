@@ -13,7 +13,8 @@ A Fully functional **Todo App** API made using [Fast API](https://fastapi.tiango
 ![Screenshot #3](screenshots/s3.png)
 ## Introduction
 
->  *I built this API on my own to learn to handle **CRUD** operations, database, authentication etc in fastapi. This API is not production ready rightnow. There are still few more features to implement, few bugs and need to add more comments. Use it carefully!*
+    I built this API on my own to learn to handle CRUD operations, database, authentication etc in fastapi. 
+    Fork it or clone it and configure it on you system and run it if you want to.
 
 ## Documentation
 
